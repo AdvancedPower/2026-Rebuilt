@@ -16,7 +16,7 @@ public class Leds extends SubsystemBase {
         m_buffer = new AddressableLEDBuffer(length);
         m_led.setLength(length);
         m_led.start();
-        setDefaultCommand(runPattern(solidColor(Color.kBlack)));
+        setDefaultCommand(runPattern(LEDPattern.solid(Color.kBlack)));
     }
 
     @Override
@@ -26,9 +26,5 @@ public class Leds extends SubsystemBase {
 
     public Command runPattern(LEDPattern pattern) {
         return run(() -> pattern.applyTo(m_buffer));
-    }
-
-    public static LEDPattern solidColor(Color color) {
-        return LEDPattern.solid(color);
     }
 }

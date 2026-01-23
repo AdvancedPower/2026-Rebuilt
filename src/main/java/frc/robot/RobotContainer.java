@@ -8,13 +8,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -48,7 +45,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
-        configureLedTimings();
+        new LedTimings(leds);
     }
 
     private void configureBindings() {
@@ -88,73 +85,6 @@ public class RobotContainer {
         joystick.x().whileTrue(pickup.run(0.2));
 
         drivetrain.registerTelemetry(logger::telemeterize);
-    }
-
-    private void configureLedTimings() {
-        final double endGameStart = 30;
-        final double phase4Start = endGameStart + 25;
-        final double phase3Start = phase4Start + 25;
-        final double phase2Start = phase3Start + 25;
-        final double phase1Start = phase2Start + 25;
-        final double transitionStart = phase1Start + 10;
-
-        final double inactiveWarningTime = 3;
-        final double activeWarningTime = 5;
-
-        final Color activeColor = Color.kGreen;
-        final Color inactiveColor = Color.kRed;
-        final Color inactiveWarningColor = Color.kYellow;
-        final Color activeWarningColor = Color.kBlue;
-
-        new Trigger(DriverStation::isAutonomousEnabled).onTrue(leds.runPattern(Leds.solidColor(activeColor)));
-        new Trigger(() -> {
-            var time = DriverStation.getMatchTime();
-            return DriverStation.isTeleopEnabled() && time <= transitionStart;
-        }).onTrue(leds.runPattern(Leds.solidColor(activeColor)));
-
-        new Trigger(() -> DriverStation.getGameSpecificMessage().isEmpty()).onFalse(Commands.runOnce(() -> {
-            var inactiveFirstChar = DriverStation.getGameSpecificMessage(); // 'R' (red) or 'B' (blue)
-            var myAlliance = DriverStation.getAlliance();
-            var inactiveFirst = myAlliance.get().name().substring(0, 1).equals(inactiveFirstChar);
-            var phase1And3Color = inactiveFirst ? inactiveColor : activeColor;
-            var phase2And4Color = inactiveFirst ? activeColor : inactiveColor;
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= phase1Start + inactiveWarningTime;
-            }).onTrue(leds.runPattern(Leds.solidColor(inactiveWarningColor)));
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= phase1Start;
-            }).onTrue(leds.runPattern(Leds.solidColor(phase1And3Color)));
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= phase2Start + activeWarningTime;
-            }).onTrue(leds.runPattern(Leds.solidColor(activeWarningColor)));
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= phase2Start;
-            }).onTrue(leds.runPattern(Leds.solidColor(phase2And4Color)));
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= phase3Start + inactiveWarningTime;
-            }).onTrue(leds.runPattern(Leds.solidColor(inactiveWarningColor)));
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= phase3Start;
-            }).onTrue(leds.runPattern(Leds.solidColor(phase1And3Color)));
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= phase4Start + activeWarningTime;
-            }).onTrue(leds.runPattern(Leds.solidColor(activeWarningColor)));
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= phase4Start;
-            }).onTrue(leds.runPattern(Leds.solidColor(phase2And4Color)));
-            new Trigger(() -> {
-                var time = DriverStation.getMatchTime();
-                return DriverStation.isTeleopEnabled() && time <= endGameStart;
-            }).onTrue(leds.runPattern(Leds.solidColor(activeColor)));
-        }));
     }
 
     public Command getAutonomousCommand() {
