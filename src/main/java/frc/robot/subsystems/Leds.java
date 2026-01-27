@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import static edu.wpi.first.units.Units.*;
+
 public class Leds extends SubsystemBase {
     private final AddressableLED m_led;
     private final AddressableLEDBuffer m_buffer;
@@ -26,5 +28,15 @@ public class Leds extends SubsystemBase {
 
     public Command runPattern(LEDPattern pattern) {
         return run(() -> pattern.applyTo(m_buffer));
+    }
+
+    public static LEDPattern scroll(Color color, double speed) {
+        return LEDPattern
+            .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, color)
+            .scrollAtRelativeSpeed(Percent.per(Second).of(speed));
+    }
+
+    public static LEDPattern blink(Color color, double speed) {
+        return LEDPattern.solid(color).blink(Seconds.of(speed));
     }
 }

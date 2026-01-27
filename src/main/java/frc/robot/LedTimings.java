@@ -1,13 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Leds;
-
-import static edu.wpi.first.units.Units.*;
 
 public class LedTimings {
     private class PhaseData {
@@ -46,14 +43,10 @@ public class LedTimings {
         final PhaseData activeData = new PhaseData(activeColor, activeWarningColor, activeWarningTime);
         final PhaseData inactiveData = new PhaseData(inactiveColor, inactiveWarningColor, inactiveWarningTime);
 
-        new Trigger(DriverStation::isAutonomousEnabled).onTrue(leds.runPattern(LEDPattern
-            .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, activeColor)
-            .scrollAtRelativeSpeed(Percent.per(Second).of(50))));
+        new Trigger(DriverStation::isAutonomousEnabled).onTrue(leds.runPattern(Leds.scroll(activeColor, 50)));
 
         new Trigger(() -> DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() <= transitionStart)
-            .onTrue(leds.runPattern(LEDPattern
-                .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, activeColor)
-                .scrollAtRelativeSpeed(Percent.per(Second).of(50))));
+            .onTrue(leds.runPattern(Leds.scroll(activeColor, 50)));
 
         new Trigger(() -> DriverStation.getGameSpecificMessage().isEmpty()).onFalse(Commands.runOnce(() -> {
             var inactiveFirstChar = DriverStation.getGameSpecificMessage(); // 'R' (red) or 'B' (blue)
@@ -64,40 +57,30 @@ public class LedTimings {
         }));
 
         new Trigger(() -> phase1And3Data != null && DriverStation.getMatchTime() < phase1Start + phase1And3Data.warningTime && phase1And3Data.phaseColor == inactiveColor)
-            .onTrue(leds.defer(() -> leds.runPattern(LEDPattern.solid(phase1And3Data.warningColor).blink(Seconds.of(0.4)))));
+            .onTrue(leds.defer(() -> leds.runPattern(Leds.blink(phase1And3Data.warningColor, 0.4))));
 
         new Trigger(() -> phase1And3Data != null && DriverStation.getMatchTime() < phase1Start)
-            .onTrue(leds.defer(() -> leds.runPattern(LEDPattern
-                .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, phase1And3Data.phaseColor)
-                .scrollAtRelativeSpeed(Percent.per(Second).of(50)))));
+            .onTrue(leds.defer(() -> leds.runPattern(Leds.scroll(phase1And3Data.phaseColor, 50))));
 
         new Trigger(() -> phase2And4Data != null && DriverStation.getMatchTime() < phase2Start + phase2And4Data.warningTime)
-            .onTrue(leds.defer(() -> leds.runPattern(LEDPattern.solid(phase2And4Data.warningColor).blink(Seconds.of(0.4)))));
+            .onTrue(leds.defer(() -> leds.runPattern(Leds.blink(phase2And4Data.warningColor, 0.4))));
 
         new Trigger(() -> phase2And4Data != null && DriverStation.getMatchTime() < phase2Start)
-            .onTrue(leds.defer(() -> leds.runPattern(LEDPattern
-                .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, phase2And4Data.phaseColor)
-                .scrollAtRelativeSpeed(Percent.per(Second).of(50)))));
+            .onTrue(leds.defer(() -> leds.runPattern(Leds.scroll(phase2And4Data.phaseColor, 50))));
 
         new Trigger(() -> phase1And3Data != null && DriverStation.getMatchTime() < phase3Start + phase1And3Data.warningTime)
-            .onTrue(leds.defer(() -> leds.runPattern(LEDPattern.solid(phase1And3Data.warningColor).blink(Seconds.of(0.4)))));
+            .onTrue(leds.defer(() -> leds.runPattern(Leds.blink(phase1And3Data.warningColor, 0.4))));
 
         new Trigger(() -> phase1And3Data != null && DriverStation.getMatchTime() < phase3Start)
-            .onTrue(leds.defer(() -> leds.runPattern(LEDPattern
-                .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, phase1And3Data.phaseColor)
-                .scrollAtRelativeSpeed(Percent.per(Second).of(50)))));
+            .onTrue(leds.defer(() -> leds.runPattern(Leds.scroll(phase1And3Data.phaseColor, 50))));
 
         new Trigger(() -> phase2And4Data != null && DriverStation.getMatchTime() < phase4Start + phase2And4Data.warningTime)
-            .onTrue(leds.defer(() -> leds.runPattern(LEDPattern.solid(phase2And4Data.warningColor).blink(Seconds.of(0.4)))));
+            .onTrue(leds.defer(() -> leds.runPattern(Leds.blink(phase2And4Data.warningColor, 0.4))));
 
         new Trigger(() -> phase2And4Data != null && DriverStation.getMatchTime() < phase4Start)
-            .onTrue(leds.defer(() -> leds.runPattern(LEDPattern
-                .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, phase2And4Data.phaseColor)
-                .scrollAtRelativeSpeed(Percent.per(Second).of(50)))));
+            .onTrue(leds.defer(() -> leds.runPattern(Leds.scroll(phase2And4Data.phaseColor, 50))));
 
         new Trigger(() -> DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() < endGameStart)
-            .onTrue(leds.runPattern(LEDPattern
-                .gradient(LEDPattern.GradientType.kDiscontinuous, Color.kBlack, activeColor)
-                .scrollAtRelativeSpeed(Percent.per(Second).of(50))));
+            .onTrue(leds.runPattern(Leds.scroll(activeColor, 50)));
     }
 }
