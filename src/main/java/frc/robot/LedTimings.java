@@ -7,17 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Leds;
 
 public class LedTimings {
-    private class PhaseData {
-        public final Color phaseColor;
-        public final Color warningColor;
-        public final double warningTime;
-
-        public PhaseData(Color phaseColor, Color warningColor, double warningTime) {
-            this.phaseColor = phaseColor;
-            this.warningColor = warningColor;
-            this.warningTime = warningTime;
-
-        }
+    private record PhaseData(Color phaseColor, Color warningColor, double warningTime) {
     }
 
     private PhaseData phase1And3Data;
@@ -45,8 +35,8 @@ public class LedTimings {
         // Determine Phase 1/3 and 2/4 colors and timings
         new Trigger(() -> DriverStation.getGameSpecificMessage().isEmpty()).onFalse(Commands.runOnce(() -> {
             var inactiveFirstChar = DriverStation.getGameSpecificMessage(); // 'R' (red) or 'B' (blue)
-            var myAlliance = DriverStation.getAlliance();
-            var inactiveFirst = myAlliance.get().name().substring(0, 1).equals(inactiveFirstChar);
+            var myAlliance = DriverStation.getAlliance().orElse(DriverStation.Alliance.Red);
+            var inactiveFirst = myAlliance.name().substring(0, 1).equals(inactiveFirstChar);
             phase1And3Data = inactiveFirst ? inactiveData : activeData;
             phase2And4Data = inactiveFirst ? activeData : inactiveData;
         }));
