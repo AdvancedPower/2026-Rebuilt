@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -37,8 +38,9 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    MotorController shooterMotor = new MockMotorController();
-    MotorController pickupMotor = new TalonFXMotorController(new TalonFX(9));
+    double shooterSpeed = 0.2;
+    MotorController shooterMotor = new TalonFXMotorController(new TalonFX(9));
+    MotorController pickupMotor = new TalonFXMotorController(new TalonFX(10));
     MotorSubsystem pickup = new MotorSubsystem(pickupMotor);
     MotorSubsystem shooter = new MotorSubsystem(shooterMotor);
     Leds leds = new Leds(9, 47);
@@ -83,6 +85,9 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         joystick.x().whileTrue(pickup.run(0.2));
+        joystick.y().whileTrue(shooter.run(() -> shooterSpeed));
+        joystick.povUp().onTrue(Commands.runOnce(() -> setShooterSpeed(shooterSpeed + 0.05)));
+        joystick.povDown().onTrue(Commands.runOnce(() -> setShooterSpeed(shooterSpeed - 0.05)));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -104,5 +109,9 @@ public class RobotContainer {
             // Finally idle for the rest of auton
             drivetrain.applyRequest(() -> idle)
         );
+    }
+
+    private void setShooterSpeed(double speed) {
+        shooterSpeed = MathUtil.clamp(speed, 0, 1);
     }
 }
