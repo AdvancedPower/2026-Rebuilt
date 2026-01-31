@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.motorcontrollers;
 
 public class MockMotorController implements MotorController {
     @Override

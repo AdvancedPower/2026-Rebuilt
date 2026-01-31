@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.MathUtil;
@@ -15,6 +16,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
+import frc.robot.motorcontrollers.MotorController;
+import frc.robot.motorcontrollers.MotorControllerGroup;
+import frc.robot.motorcontrollers.TalonFXMotorController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.MotorSubsystem;
@@ -39,10 +43,12 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     double shooterSpeed = 0.2;
-    MotorController shooterMotor = new TalonFXMotorController(new TalonFX(9));
-    MotorController pickupMotor = new TalonFXMotorController(new TalonFX(10));
-    MotorSubsystem pickup = new MotorSubsystem(pickupMotor);
-    MotorSubsystem shooter = new MotorSubsystem(shooterMotor);
+    double pickupSpeed = 0.2;
+    MotorController shooterMotor = new TalonFXMotorController(new TalonFX(9), InvertedValue.CounterClockwise_Positive);
+    MotorController pickupMotor = new TalonFXMotorController(new TalonFX(10), InvertedValue.CounterClockwise_Positive);
+    MotorController group = new MotorControllerGroup(shooterMotor, pickupMotor);
+    //MotorSubsystem pickup = new MotorSubsystem(pickupMotor);
+    MotorSubsystem shooter = new MotorSubsystem(group);
     Leds leds = new Leds(9, 47);
 
     public RobotContainer() {
@@ -84,10 +90,18 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        joystick.x().whileTrue(pickup.run(0.2));
+//        joystick.x().whileTrue(pickup.run(() -> pickupSpeed));
         joystick.y().whileTrue(shooter.run(() -> shooterSpeed));
-        joystick.povUp().onTrue(Commands.runOnce(() -> setShooterSpeed(shooterSpeed + 0.05)));
-        joystick.povDown().onTrue(Commands.runOnce(() -> setShooterSpeed(shooterSpeed - 0.05)));
+        joystick.povUp().onTrue(Commands.runOnce(() -> shooterSpeed = clampSpeed(shooterSpeed + 0.05)));
+        joystick.povDown().onTrue(Commands.runOnce(() -> shooterSpeed = clampSpeed(shooterSpeed - 0.05)));
+        joystick.povRight().onTrue(Commands.runOnce(() -> pickupSpeed = clampSpeed(pickupSpeed + 0.05)));
+        joystick.povLeft().onTrue(Commands.runOnce(() -> pickupSpeed = clampSpeed(pickupSpeed - 0.05)));
+
+        joystick.rightTrigger().whileTrue(drivetrain.applyRequest(() ->
+            drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(LimelightHelpers.getTX("limelight-hub") * -0.1) // Drive counterclockwise with negative X (left)
+        ));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -111,7 +125,13 @@ public class RobotContainer {
         );
     }
 
-    private void setShooterSpeed(double speed) {
-        shooterSpeed = MathUtil.clamp(speed, 0, 1);
+    private static double clampSpeed(double speed) {
+        return MathUtil.clamp(speed, 0, 1);
+    }
+
+    private double getDynamicShooterSpeed() {
+        var ta = LimelightHelpers.getTA("limelight-hub");
+        return ta == 0 ? 0 : 1 - ta * .01;
+
     }
 }
