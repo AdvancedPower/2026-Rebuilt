@@ -88,7 +88,7 @@ public class RobotContainer {
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on left bumper press.
-        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
 //        joystick.x().whileTrue(pickup.run(() -> pickupSpeed));
         joystick.y().whileTrue(shooter.run(() -> shooterSpeed));
@@ -101,6 +101,7 @@ public class RobotContainer {
             drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                 .withRotationalRate(LimelightHelpers.getTX("limelight-hub") * -0.1) // Drive counterclockwise with negative X (left)
+                .withRotationalDeadband(0)
         ));
 
         drivetrain.registerTelemetry(logger::telemeterize);
