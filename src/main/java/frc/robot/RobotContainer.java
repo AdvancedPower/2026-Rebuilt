@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
+import frc.robot.motorcontrollers.MockMotorController;
 import frc.robot.motorcontrollers.MotorController;
 import frc.robot.motorcontrollers.MotorControllerGroup;
 import frc.robot.motorcontrollers.TalonFXMotorController;
@@ -44,8 +45,8 @@ public class RobotContainer {
 
     double shooterSpeed = 0.2;
     double pickupSpeed = 0.2;
-    MotorController shooterMotor = new TalonFXMotorController(new TalonFX(9), InvertedValue.CounterClockwise_Positive);
-    MotorController pickupMotor = new TalonFXMotorController(new TalonFX(10), InvertedValue.CounterClockwise_Positive);
+    MotorController shooterMotor = new MockMotorController(); // new TalonFXMotorController(new TalonFX(9), InvertedValue.CounterClockwise_Positive);
+    MotorController pickupMotor = new MockMotorController();// new TalonFXMotorController(new TalonFX(10), InvertedValue.CounterClockwise_Positive);
     MotorController group = new MotorControllerGroup(shooterMotor, pickupMotor);
     //MotorSubsystem pickup = new MotorSubsystem(pickupMotor);
     MotorSubsystem shooter = new MotorSubsystem(group);
