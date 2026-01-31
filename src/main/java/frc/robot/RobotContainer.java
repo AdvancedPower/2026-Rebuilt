@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,12 +16,11 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.motorcontrollers.MockMotorController;
-import frc.robot.motorcontrollers.MotorController;
-import frc.robot.motorcontrollers.MotorControllerGroup;
 import frc.robot.motorcontrollers.TalonFXMotorController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.MotorSubsystem;
+import frc.robot.subsystems.Shooter;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -43,16 +41,15 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    double shooterSpeed = 0.2;
-    double pickupSpeed = 0.2;
-    MotorController shooterMotor = new MockMotorController(); // new TalonFXMotorController(new TalonFX(9), InvertedValue.CounterClockwise_Positive);
-    MotorController pickupMotor = new MockMotorController();// new TalonFXMotorController(new TalonFX(10), InvertedValue.CounterClockwise_Positive);
-    MotorController group = new MotorControllerGroup(shooterMotor, pickupMotor);
-    //MotorSubsystem pickup = new MotorSubsystem(pickupMotor);
-    MotorSubsystem shooter = new MotorSubsystem(group);
+    MotorSubsystem pickup;
+    Shooter shooter;
     Leds leds = new Leds(9, 47);
 
     public RobotContainer() {
+        var frontShooterController = new TalonFXMotorController(new TalonFX(11), InvertedValue.Clockwise_Positive);
+        var backShooterController = new TalonFXMotorController(new TalonFX(12), InvertedValue.CounterClockwise_Positive);
+        shooter = new Shooter(frontShooterController, backShooterController);
+        pickup = new MotorSubsystem(new MockMotorController());
         configureBindings();
         new LedTimings(leds);
     }
@@ -91,12 +88,12 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-//        joystick.x().whileTrue(pickup.run(() -> pickupSpeed));
-        joystick.y().whileTrue(shooter.run(() -> shooterSpeed));
-        joystick.povUp().onTrue(Commands.runOnce(() -> shooterSpeed = clampSpeed(shooterSpeed + 0.05)));
-        joystick.povDown().onTrue(Commands.runOnce(() -> shooterSpeed = clampSpeed(shooterSpeed - 0.05)));
-        joystick.povRight().onTrue(Commands.runOnce(() -> pickupSpeed = clampSpeed(pickupSpeed + 0.05)));
-        joystick.povLeft().onTrue(Commands.runOnce(() -> pickupSpeed = clampSpeed(pickupSpeed - 0.05)));
+        joystick.x().whileTrue(pickup.run(() -> 0.2));
+        joystick.y().whileTrue(shooter.run());
+        joystick.povUp().onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() + 0.05)));
+        joystick.povDown().onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() - 0.05)));
+        joystick.povRight().onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() + 0.05)));
+        joystick.povLeft().onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() - 0.05)));
 
         joystick.rightTrigger().whileTrue(drivetrain.applyRequest(() ->
             drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
@@ -127,13 +124,8 @@ public class RobotContainer {
         );
     }
 
-    private static double clampSpeed(double speed) {
-        return MathUtil.clamp(speed, 0, 1);
-    }
-
     private double getDynamicShooterSpeed() {
         var ta = LimelightHelpers.getTA("limelight-hub");
         return ta == 0 ? 0 : 1 - ta * .01;
-
     }
 }
