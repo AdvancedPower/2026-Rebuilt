@@ -43,15 +43,16 @@ public class RobotContainer {
 
     MotorSubsystem pickup;
     Shooter shooter;
-    Leds leds = new Leds(9, 47);
+    //Leds leds = new Leds(9, 47);
 
     public RobotContainer() {
-        var frontShooterController = new TalonFXMotorController(new TalonFX(11), InvertedValue.Clockwise_Positive);
-        var backShooterController = new TalonFXMotorController(new TalonFX(12), InvertedValue.CounterClockwise_Positive);
-        shooter = new Shooter(frontShooterController, backShooterController);
+//        var frontShooterController = new TalonFXMotorController(new TalonFX(11), InvertedValue.Clockwise_Positive);
+//        var backShooterController = new TalonFXMotorController(new TalonFX(12), InvertedValue.CounterClockwise_Positive);
+//        shooter = new Shooter(frontShooterController, backShooterController);
+        shooter = new Shooter(new MockMotorController(), new MockMotorController());
         pickup = new MotorSubsystem(new MockMotorController());
         configureBindings();
-        new LedTimings(leds);
+        //new LedTimings(leds);
     }
 
     private void configureBindings() {
@@ -95,12 +96,8 @@ public class RobotContainer {
         joystick.povRight().onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() + 0.05)));
         joystick.povLeft().onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() - 0.05)));
 
-        joystick.rightTrigger().whileTrue(drivetrain.applyRequest(() ->
-            drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(LimelightHelpers.getTX("limelight-hub") * -0.1) // Drive counterclockwise with negative X (left)
-                .withRotationalDeadband(0)
-        ));
+        joystick.leftTrigger().whileTrue(getCenterOnLimelightTargetCommand(0));
+        joystick.rightTrigger().whileTrue(getCenterOnLimelightTargetCommand(1));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -122,6 +119,17 @@ public class RobotContainer {
             // Finally idle for the rest of auton
             drivetrain.applyRequest(() -> idle)
         );
+    }
+
+    private Command getCenterOnLimelightTargetCommand(int pipelineIndex) {
+        return Commands
+            .runOnce(() -> LimelightHelpers.setPipelineIndex("limelight", pipelineIndex))
+            .andThen(drivetrain.applyRequest(() ->
+                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(LimelightHelpers.getTX("limelight") * -0.1) // Drive counterclockwise with negative X (left)
+                    .withRotationalDeadband(0)
+            ));
     }
 
     private double getDynamicShooterSpeed() {
