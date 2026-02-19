@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.motorcontrollers.MockMotorController;
+import frc.robot.motorcontrollers.MotorControllerGroup;
 import frc.robot.motorcontrollers.TalonFXMotorController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Leds;
@@ -46,10 +47,12 @@ public class RobotContainer {
     //Leds leds = new Leds(9, 47);
 
     public RobotContainer() {
-//        var frontShooterController = new TalonFXMotorController(new TalonFX(11), InvertedValue.Clockwise_Positive);
-//        var backShooterController = new TalonFXMotorController(new TalonFX(12), InvertedValue.CounterClockwise_Positive);
-//        shooter = new Shooter(frontShooterController, backShooterController);
-        shooter = new Shooter(new MockMotorController(), new MockMotorController());
+        var frontShooterController = new MotorControllerGroup(
+            new TalonFXMotorController(new TalonFX(10), InvertedValue.CounterClockwise_Positive),
+            new TalonFXMotorController(new TalonFX(11), InvertedValue.Clockwise_Positive)
+        );
+        var backShooterController = new TalonFXMotorController(new TalonFX(12), InvertedValue.Clockwise_Positive);
+        shooter = new Shooter(frontShooterController, backShooterController);
         pickup = new MotorSubsystem(new MockMotorController());
         configureBindings();
         //new LedTimings(leds);
@@ -91,10 +94,14 @@ public class RobotContainer {
 
         joystick.x().whileTrue(pickup.run(() -> 0.2));
         joystick.y().whileTrue(shooter.run());
-        joystick.povUp().onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() + 0.05)));
-        joystick.povDown().onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() - 0.05)));
-        joystick.povRight().onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() + 0.05)));
-        joystick.povLeft().onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() - 0.05)));
+        joystick.povUp().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() + 0.05)));
+        joystick.povDown().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() - 0.05)));
+        joystick.povRight().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() + 0.05)));
+        joystick.povLeft().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() - 0.05)));
+        joystick.povUp().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() + 0.01)));
+        joystick.povDown().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() - 0.01)));
+        joystick.povRight().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() + 0.01)));
+        joystick.povLeft().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() - 0.01)));
 
         joystick.leftTrigger().whileTrue(getCenterOnLimelightTargetCommand(0));
         joystick.rightTrigger().whileTrue(getCenterOnLimelightTargetCommand(1));

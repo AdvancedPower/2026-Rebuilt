@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
     }
 
     private void printSpeeds(){
-        System.out.println("front speed: " + frontSpeed);
-        System.out.println("back speed: " + backSpeed);
+        System.out.printf("front speed: %.2f%n", frontSpeed);
+        System.out.printf("back speed: %.2f%n%n", backSpeed);
     }
 }
