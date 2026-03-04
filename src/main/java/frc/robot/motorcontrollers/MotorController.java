@@ -1,5 +1,7 @@
 package frc.robot.motorcontrollers;
 
 public interface MotorController {
-    void set(double speed);
+    void setOutput(double output);
+
+    double getOutput();
 }

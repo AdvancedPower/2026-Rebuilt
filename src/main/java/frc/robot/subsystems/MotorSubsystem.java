@@ -14,11 +14,11 @@ public class MotorSubsystem extends SubsystemBase {
         this.motor = motor;
     }
 
-    public Command run(DoubleSupplier speedSupplier) {
-        return this.runEnd(() -> motor.set(speedSupplier.getAsDouble()), () -> motor.set(0));
+    public Command run(DoubleSupplier outputSupplier) {
+        return this.runEnd(() -> motor.setOutput(outputSupplier.getAsDouble()), () -> motor.setOutput(0));
     }
 
     public Command run(double speed) {
-        return this.startEnd(() -> motor.set(speed), () -> motor.set(0));
+        return this.startEnd(() -> motor.setOutput(speed), () -> motor.setOutput(0));
     }
 }

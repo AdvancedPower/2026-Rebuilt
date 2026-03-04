@@ -16,12 +16,10 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.motorcontrollers.MockMotorController;
-import frc.robot.motorcontrollers.MotorControllerGroup;
 import frc.robot.motorcontrollers.TalonFXMotorController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.MotorSubsystem;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.DualMotorSubsystem;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -42,18 +40,27 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    MotorSubsystem pickup;
-    Shooter shooter;
+    private final MotorSubsystem pickup = new MotorSubsystem(new MockMotorController());
+
+    private final MotorSubsystem lifter = new MotorSubsystem(new TalonFXMotorController(new TalonFX(15))
+        .withFollower(new TalonFX(16), false));
+
+    private final DualMotorSubsystem shooter = new DualMotorSubsystem(
+        // Front motors
+        new TalonFXMotorController(new TalonFX(10), InvertedValue.CounterClockwise_Positive)
+            .withFollower(new TalonFX(11), false),
+        // Back motor
+        new TalonFXMotorController(new TalonFX(12), InvertedValue.Clockwise_Positive));
+
+    private final DualMotorSubsystem feeder = new DualMotorSubsystem(
+        // Front motor
+        new TalonFXMotorController(new TalonFX(13), InvertedValue.Clockwise_Positive),
+        // Back motor
+        new TalonFXMotorController(new TalonFX(14), InvertedValue.Clockwise_Positive));
+
     //Leds leds = new Leds(9, 47);
 
     public RobotContainer() {
-        var frontShooterController = new MotorControllerGroup(
-            new TalonFXMotorController(new TalonFX(10), InvertedValue.CounterClockwise_Positive),
-            new TalonFXMotorController(new TalonFX(11), InvertedValue.Clockwise_Positive)
-        );
-        var backShooterController = new TalonFXMotorController(new TalonFX(12), InvertedValue.Clockwise_Positive);
-        shooter = new Shooter(frontShooterController, backShooterController);
-        pickup = new MotorSubsystem(new MockMotorController());
         configureBindings();
         //new LedTimings(leds);
     }
@@ -93,20 +100,26 @@ public class RobotContainer {
         joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         joystick.x().whileTrue(pickup.run(() -> 0.2));
-        joystick.y().whileTrue(shooter.run());
-        joystick.povUp().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() + 0.05)));
-        joystick.povDown().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() - 0.05)));
-        joystick.povRight().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() + 0.05)));
-        joystick.povLeft().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() - 0.05)));
-        joystick.povUp().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() + 0.01)));
-        joystick.povDown().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setFrontSpeed(shooter.getFrontSpeed() - 0.01)));
-        joystick.povRight().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() + 0.01)));
-        joystick.povLeft().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setBackSpeed(shooter.getBackSpeed() - 0.01)));
+        joystick.y().whileTrue(getShootCommand());
+        joystick.povUp().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() + 0.05)));
+        joystick.povDown().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() - 0.05)));
+        joystick.povRight().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() + 0.05)));
+        joystick.povLeft().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() - 0.05)));
+        joystick.povUp().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() + 0.002)));
+        joystick.povDown().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() - 0.002)));
+        joystick.povRight().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() + 0.01)));
+        joystick.povLeft().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() - 0.01)));
 
         joystick.leftTrigger().whileTrue(getCenterOnLimelightTargetCommand(0));
         joystick.rightTrigger().whileTrue(getCenterOnLimelightTargetCommand(1));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+    }
+
+    private Command getShootCommand() {
+        return shooter.run().alongWith(
+            Commands.waitSeconds(1).andThen(feeder.run())
+        );
     }
 
     public Command getAutonomousCommand() {
@@ -139,7 +152,7 @@ public class RobotContainer {
             ));
     }
 
-    private double getDynamicShooterSpeed() {
+    private double getDynamicShooterOutput() {
         var ta = LimelightHelpers.getTA("limelight-hub");
         return ta == 0 ? 0 : 1 - ta * .01;
     }
