@@ -15,11 +15,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
-import frc.robot.motorcontrollers.MockMotorController;
 import frc.robot.motorcontrollers.TalonFXMotorController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.MotorSubsystem;
 import frc.robot.subsystems.DualMotorSubsystem;
+import frc.robot.subsystems.MotorSubsystem;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -40,10 +39,13 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final MotorSubsystem pickup = new MotorSubsystem(new MockMotorController());
+    private final MotorSubsystem pickup = new MotorSubsystem(
+        new TalonFXMotorController(new TalonFX(17)));
 
-    private final MotorSubsystem lifter = new MotorSubsystem(new TalonFXMotorController(new TalonFX(15))
-        .withFollower(new TalonFX(16), false));
+    private final MotorSubsystem lifter = new MotorSubsystem(
+        new TalonFXMotorController(new TalonFX(15))
+            .withMotionMagic(40, 1)
+            .withFollower(new TalonFX(16), false));
 
     private final DualMotorSubsystem shooter = new DualMotorSubsystem(
         // Front motors
@@ -84,10 +86,10 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        joystick.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        ));
+//        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+//        joystick.b().whileTrue(drivetrain.applyRequest(() ->
+//            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+//        ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -99,8 +101,10 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        joystick.x().whileTrue(pickup.run(() -> 0.2));
+        joystick.x().whileTrue(pickup.run(() -> 0.7));
         joystick.y().whileTrue(getShootCommand());
+        joystick.b().onTrue(lifter.go_to_position(0));
+        joystick.a().onTrue(lifter.go_to_position(-35));
         joystick.povUp().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() + 0.05)));
         joystick.povDown().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() - 0.05)));
         joystick.povRight().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() + 0.05)));
@@ -117,8 +121,7 @@ public class RobotContainer {
     }
 
     private Command getShootCommand() {
-        return shooter.run().alongWith(
-            Commands.waitSeconds(1).andThen(feeder.run())
+        return shooter.run().alongWith(Commands.waitSeconds(1).andThen(feeder.run())
         );
     }
 

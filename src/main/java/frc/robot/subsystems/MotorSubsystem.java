@@ -15,10 +15,18 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command run(DoubleSupplier outputSupplier) {
-        return this.runEnd(() -> motor.setOutput(outputSupplier.getAsDouble()), () -> motor.setOutput(0));
+        return runEnd(() -> motor.setOutput(outputSupplier.getAsDouble()), motor::stop);
     }
 
     public Command run(double speed) {
-        return this.startEnd(() -> motor.setOutput(speed), () -> motor.setOutput(0));
+        return startEnd(() -> motor.setOutput(speed), motor::stop);
+    }
+
+    public Command go_to_position(double position) {
+        return runOnce(() -> motor.setPosition(position));
+    }
+
+    public MotorController getMotor() {
+        return motor;
     }
 }

@@ -1,21 +1,22 @@
 package frc.robot.motorcontrollers;
 
-import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import edu.wpi.first.units.measure.AngularVelocity;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class TalonFXMotorController implements MotorController {
     private final TalonFX motor;
+    private final MotionMagicVoltage motionMagicRequest;
 
     public TalonFXMotorController(TalonFX motor) {
         this.motor = motor;
+        motionMagicRequest = new MotionMagicVoltage(0);
     }
 
     public TalonFXMotorController(TalonFX motor, InvertedValue inverted) {
@@ -33,31 +34,53 @@ public class TalonFXMotorController implements MotorController {
         return motor.getVelocity().getValueAsDouble();
     }
 
-    public TalonFXMotorController withFollower(TalonFX follower, boolean isAligned) {
-        var motorInverted = getInverted(motor);
-        var followerInverted = isAligned ? motorInverted : invertInvertedValue(motorInverted);
-        setInverted(follower, followerInverted);
-        follower.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Aligned));
+    public TalonFXMotorController withMotionMagic(double velocity, double p) {
+        var configurator = motor.getConfigurator();
+
+        var slot0 = new Slot0Configs();
+        configurator.refresh(slot0);
+        configurator.apply(slot0.withKP(p));
+
+        var motionMagic = new MotionMagicConfigs();
+        configurator.refresh(motionMagic);
+        configurator.apply(motionMagic
+            .withMotionMagicCruiseVelocity(velocity)
+            .withMotionMagicAcceleration(velocity * 2)
+            .withMotionMagicJerk(velocity * 20));
+
+        var motorOutput = new MotorOutputConfigs();
+        configurator.refresh(motorOutput);
+        configurator.apply(motorOutput.withNeutralMode(NeutralModeValue.Brake));
+
         return this;
     }
 
-    private static InvertedValue getInverted(TalonFX motor) {
-        var configuration = new MotorOutputConfigs();
-        motor.getConfigurator().refresh(configuration);
-        return configuration.Inverted;
+    public TalonFXMotorController withFollower(TalonFX follower, boolean isAligned) {
+
+        var alignment = isAligned ? MotorAlignmentValue.Aligned : MotorAlignmentValue.Opposed;
+        follower.setControl(new Follower(motor.getDeviceID(), alignment));
+        return this;
+    }
+
+    @Override
+    public void setPosition(double position) {
+        motor.setControl(motionMagicRequest.withPosition(position));
+    }
+
+    @Override
+    public double getPosition() {
+        return motor.getPosition().getValueAsDouble();
+    }
+
+    @Override
+    public void stop() {
+        motor.stopMotor();
     }
 
     private static void setInverted(TalonFX motor, InvertedValue inverted) {
-        motor.getConfigurator().apply(
-            new TalonFXConfiguration().withMotorOutput(
-                new MotorOutputConfigs().withInverted(inverted)
-            )
-        );
-    }
-
-    private static InvertedValue invertInvertedValue(InvertedValue inverted) {
-        return inverted == InvertedValue.CounterClockwise_Positive
-            ? InvertedValue.Clockwise_Positive
-            : InvertedValue.CounterClockwise_Positive;
+        var motorOutput = new MotorOutputConfigs();
+        var configurator = motor.getConfigurator();
+        configurator.refresh(motorOutput);
+        configurator.apply(motorOutput.withInverted(inverted));
     }
 }

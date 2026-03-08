@@ -18,7 +18,7 @@ public class DualMotorSubsystem extends SubsystemBase {
     }
 
     public Command run() {
-        return Commands.runEnd(() -> setMotors(output1, output2), () -> setMotors(0, 0));
+        return Commands.runEnd(() -> setMotors(output1, output2), this::stopMotors);
     }
 
     public double getOutput1() {
@@ -42,6 +42,11 @@ public class DualMotorSubsystem extends SubsystemBase {
     private void setMotors(double motor1Output, double motor2Output) {
         motor1.setOutput(motor1Output);
         motor2.setOutput(motor2Output);
+    }
+
+    private void stopMotors() {
+        motor1.stop();
+        motor2.stop();
     }
 
     private static double clampOutput(double speed) {
