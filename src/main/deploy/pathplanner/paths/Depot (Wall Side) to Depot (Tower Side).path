@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.49972484277418483,
+        "y": 6.999701257861797
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.5410927672955977,
+        "y": 6.137869496855346
+      },
+      "isLocked": false,
+      "linkedName": "Depot (Wall Side)"
+    },
+    {
+      "anchor": {
+        "x": 0.520408805038336,
+        "y": 4.986462264151105
+      },
+      "prevControl": {
+        "x": 0.5273034591194969,
+        "y": 5.951713836477987
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Depot (Tower Side)"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.46205272189253
+  },
+  "reversed": false,
+  "folder": "Depot Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 88.17203175630297
+  },
+  "useDefaultConstraints": true
+}

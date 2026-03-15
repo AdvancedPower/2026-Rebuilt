@@ -1,0 +1,59 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.301554921540655,
+        "y": 5.322396576319543
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.2397781919753985,
+        "y": 5.260344689522982
+      },
+      "isLocked": false,
+      "linkedName": "L-Shoot"
+    },
+    {
+      "anchor": {
+        "x": 0.520408805038336,
+        "y": 4.986462264151105
+      },
+      "prevControl": {
+        "x": 1.4580817610076704,
+        "y": 5.076092767291652
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Depot (Tower Side)"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 88.49973921837942
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.46205272189253
+  },
+  "reversed": false,
+  "folder": "Depot Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -42.87890360386118
+  },
+  "useDefaultConstraints": true
+}

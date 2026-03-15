@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L Start to L-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Fuel"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L-Shoot to Tower"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climb to L1"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Tower Autons",
+  "choreoAuto": false
+}

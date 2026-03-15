@@ -1,0 +1,59 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.5341981132144364,
+        "y": 0.6290408805033065
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.3819654088050317,
+        "y": 0.3325707547169815
+      },
+      "isLocked": false,
+      "linkedName": "Outpost"
+    },
+    {
+      "anchor": {
+        "x": 3.301554921540655,
+        "y": 5.322396576319543
+      },
+      "prevControl": {
+        "x": 2.170831651093515,
+        "y": 4.701877708394853
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "L-Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -42.87890360386118
+  },
+  "reversed": false,
+  "folder": "Outpost Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -178.75463573322946
+  },
+  "useDefaultConstraints": true
+}

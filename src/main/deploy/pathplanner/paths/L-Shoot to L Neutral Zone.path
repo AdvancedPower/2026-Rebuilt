@@ -1,0 +1,59 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.301554921540655,
+        "y": 5.322396576319543
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.2196445441752748,
+        "y": 8.487042802734475
+      },
+      "isLocked": false,
+      "linkedName": "L-Shoot"
+    },
+    {
+      "anchor": {
+        "x": 7.7942688679299295,
+        "y": 7.316855345914929
+      },
+      "prevControl": {
+        "x": 6.71180817610063,
+        "y": 7.213435534591195
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "L Side Neutral Zone"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6578313253012051,
+      "rotationDegrees": -88.33701056994398
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.34183742748161
+  },
+  "reversed": false,
+  "folder": "Neutral Zone Travel",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -42.87890360386118
+  },
+  "useDefaultConstraints": true
+}

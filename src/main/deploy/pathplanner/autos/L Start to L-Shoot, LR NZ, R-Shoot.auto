@@ -1,0 +1,75 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L Start to L-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Fuel"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "L-Shoot to L Neutral Zone"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lower Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Across Neutral Zone L to R"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup Fuel"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R Neutral Zone to R-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Fuel"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Neutral Zone Autons",
+  "choreoAuto": false
+}

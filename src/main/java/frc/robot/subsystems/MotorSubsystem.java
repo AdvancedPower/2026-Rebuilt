@@ -25,8 +25,4 @@ public class MotorSubsystem extends SubsystemBase {
     public Command go_to_position(double position) {
         return runOnce(() -> motor.setPosition(position));
     }
-
-    public MotorController getMotor() {
-        return motor;
-    }
 }

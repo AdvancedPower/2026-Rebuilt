@@ -1,8 +1,6 @@
 package frc.robot.motorcontrollers;
 
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -59,6 +57,29 @@ public class TalonFXMotorController implements MotorController {
 
         var alignment = isAligned ? MotorAlignmentValue.Aligned : MotorAlignmentValue.Opposed;
         follower.setControl(new Follower(motor.getDeviceID(), alignment));
+        return this;
+    }
+
+    public TalonFXMotorController withCurrentLimits(double statorCurrentLimit, double supplyCurrentLimit, double supplyCurrentLowerLimit) {
+        var currentLimits = new CurrentLimitsConfigs();
+        var configurator = motor.getConfigurator();
+        configurator.refresh(currentLimits);
+        configurator.apply(currentLimits
+            .withStatorCurrentLimitEnable(true)
+            .withStatorCurrentLimit(statorCurrentLimit)
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(supplyCurrentLimit)
+            .withSupplyCurrentLowerLimit(supplyCurrentLowerLimit));
+        return this;
+    }
+
+    public TalonFXMotorController withVoltageLimit(double forwardVoltage, double reverseVoltage) {
+        var voltage = new VoltageConfigs();
+        var configurator = motor.getConfigurator();
+        configurator.refresh(voltage);
+        configurator.apply(voltage
+            .withPeakForwardVoltage(forwardVoltage)
+            .withPeakReverseVoltage(reverseVoltage));
         return this;
     }
 

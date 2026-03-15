@@ -1,0 +1,87 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C Start to C-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Fuel"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C-Shoot to Tower Side Depot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Depot (Tower Side) to Depot (Wall Side)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup Fuel"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Wall Side Depot to L-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Fuel"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L-Shoot to L Neutral Zone"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Across Neutral Zone L to R"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup Fuel"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Depot Autons",
+  "choreoAuto": false
+}
