@@ -17,9 +17,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "R-Shoot to R Neutral Zone"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R-Shoot to R Neutral Zone"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lower Intake"
+                }
+              }
+            ]
           }
         },
         {
@@ -57,6 +70,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Neutral Zone Autons",
+  "folder": null,
   "choreoAuto": false
 }
