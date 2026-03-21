@@ -32,10 +32,13 @@ public class Shooter {
     }
 
     public Command shoot() {
-        return shootMotors.defer(() ->
-            shootMotors.run(shooterOutput1, shooterOutput2)
-                .alongWith(Commands.waitSeconds(1)
-                    .andThen(feederMotors.run(feederOutput1, feederOutput2))));
+        return shootMotors.defer(() -> shoot(shooterOutput1, shooterOutput2));
+    }
+
+    public Command shoot(double shooterOutput1, double shooterOutput2) {
+        return shootMotors.run(shooterOutput1, shooterOutput2)
+            .alongWith(Commands.waitSeconds(1)
+                .andThen(feederMotors.run(feederOutput1, feederOutput2)));
     }
 
     public Command reverseFeeder() {

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.443880171184022,
-        "y": 4.054407988587732
+        "x": 2.168231132075472,
+        "y": 4.014316037735849
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.010067278102261,
-        "y": 8.61866899487704
+        "x": -0.26558176100628916,
+        "y": 8.578577044025158
       },
       "isLocked": false,
       "linkedName": "C-Shoot"
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.34183742748161
+    "rotation": -88.949
   },
   "reversed": false,
   "folder": "Neutral Zone Travel",

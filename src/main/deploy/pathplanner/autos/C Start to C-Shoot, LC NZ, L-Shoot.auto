@@ -17,22 +17,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "C-Shoot to R Neural Zone"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Lower Intake"
-                }
-              }
-            ]
+            "pathName": "C-Shoot to L Neutral Zone"
           }
         },
         {
@@ -42,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Across Neutral Zone R to L"
+                  "pathName": "Across Neutral Zone L to R"
                 }
               },
               {
@@ -57,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L Neutral Zone to L-Shoot"
+            "pathName": "LC Neutral Zone to L-Shoot"
           }
         },
         {

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.301554921540655,
-        "y": 5.322396576319543
+        "x": 2.6577515723339333,
+        "y": 5.186407232704564
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.2196445441752748,
-        "y": 8.487042802734475
+        "x": -0.4241588050314471,
+        "y": 8.351053459119496
       },
       "isLocked": false,
       "linkedName": "L-Shoot"
@@ -47,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.34183742748161
+    "rotation": -88.949
   },
   "reversed": false,
   "folder": "Neutral Zone Travel",

@@ -3,13 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.814952830188679,
-        "y": 0.8841430817610059
+        "x": 7.80805817610063,
+        "y": 3.4972169811320755
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.487480035486535,
-        "y": 0.4496539485424679
+        "x": 7.773584905660378,
+        "y": 2.152759433962265
+      },
+      "isLocked": false,
+      "linkedName": "RC Neutral Zone"
+    },
+    {
+      "anchor": {
+        "x": 7.814952830188679,
+        "y": 0.8841430817610059
+      },
+      "prevControl": {
+        "x": 8.063034473927189,
+        "y": 0.9150542130894465
+      },
+      "nextControl": {
+        "x": 5.656926100628931,
+        "y": 0.615251572327044
       },
       "isLocked": false,
       "linkedName": "R Side Neutral Zone"
@@ -20,15 +36,24 @@
         "y": 2.787067610062893
       },
       "prevControl": {
-        "x": 0.32046383647291377,
-        "y": 0.16709905660936997
+        "x": -0.10011006289308133,
+        "y": 0.05678459119496937
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "R-Shoot"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.1734939759036138,
+      "rotationDegrees": 178.39920576045736
+    },
+    {
+      "waypointRelativePos": 1.510843373493975,
+      "rotationDegrees": 175.81356205563395
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -48,7 +73,7 @@
   "folder": "Neutral Zone Travel",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 91.68468431789607
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

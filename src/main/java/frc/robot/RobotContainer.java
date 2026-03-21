@@ -52,8 +52,8 @@ public class RobotContainer {
     private final Shooter shooter = new Shooter(
         new DualMotorSubsystem(
             // Front motors
-            new TalonFXMotorController(new TalonFX(10), InvertedValue.CounterClockwise_Positive)
-                .withFollower(new TalonFX(11), false),
+            new TalonFXMotorController(new TalonFX(9), InvertedValue.CounterClockwise_Positive)
+                .withFollower(new TalonFX(10), false),
             // Back motor
             new TalonFXMotorController(new TalonFX(12), InvertedValue.Clockwise_Positive)),
         new DualMotorSubsystem(
@@ -110,14 +110,16 @@ public class RobotContainer {
         joystick.leftTrigger().and(joystick.rightBumper()).whileTrue(intake.eject());
         joystick.rightTrigger().and(joystick.leftBumper().negate()).whileTrue(shooter.shoot());
         joystick.rightTrigger().and(joystick.leftBumper()).whileTrue(shooter.reverseFeeder());
+        joystick.b().whileTrue(shooter.shoot(0.6, 0.6));
+        joystick.x().whileTrue(getCenterOnLimelightTargetCommand(0));
         joystick.y().onTrue(lifter.lift());
         joystick.a().onTrue(lifter.lower());
         joystick.povUp().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() + 0.05)));
         joystick.povDown().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() - 0.05)));
         joystick.povRight().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() + 0.05)));
         joystick.povLeft().and(joystick.rightBumper().negate()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() - 0.05)));
-        joystick.povUp().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() + 0.002)));
-        joystick.povDown().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() - 0.002)));
+        joystick.povUp().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() + 0.01)));
+        joystick.povDown().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput1(shooter.getOutput1() - 0.01)));
         joystick.povRight().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() + 0.01)));
         joystick.povLeft().and(joystick.rightBumper()).onTrue(Commands.runOnce(() -> shooter.setOutput2(shooter.getOutput2() - 0.01)));
 
@@ -135,9 +137,9 @@ public class RobotContainer {
         return Commands
             .runOnce(() -> LimelightHelpers.setPipelineIndex("limelight", pipelineIndex))
             .andThen(drivetrain.applyRequest(() -> autoCenterDrive
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                .withVelocityX(LimelightHelpers.getTargetPose_CameraSpace("limelight")[2] - 1.5) // Drive forward with negative Y (forward)
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(LimelightHelpers.getTY("limelight") * -0.1) // Drive counterclockwise with negative X (left)
+                .withRotationalRate(LimelightHelpers.getTX("limelight") * -0.1) // Drive counterclockwise with negative X (left)
             ));
     }
 

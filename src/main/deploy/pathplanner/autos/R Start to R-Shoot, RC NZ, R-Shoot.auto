@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C Start to C-Shoot"
+            "pathName": "R Start to R-Shoot"
           }
         },
         {
@@ -17,22 +17,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "C-Shoot to L Neutral Zone"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Lower Intake"
-                }
-              }
-            ]
+            "pathName": "R-Shoot to R Neutral Zone"
           }
         },
         {
@@ -42,13 +29,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Across Neutral Zone L to R"
+                  "pathName": "Across Neutral Zone R to L"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Pickup Fuel"
+                  "name": "Shoot Fuel"
                 }
               }
             ]
@@ -57,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R Neutral Zone to R-Shoot"
+            "pathName": "RC Neutral Zone to R-Shoot"
           }
         },
         {

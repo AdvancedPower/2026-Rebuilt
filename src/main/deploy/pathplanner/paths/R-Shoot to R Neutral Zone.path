@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.2886162624821687,
-        "y": 3.019315263908702
+        "x": 2.871485849056604,
+        "y": 2.787067610062893
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.606595822234461,
-        "y": 0.07529796830535762
+        "x": 0.18946540880889629,
+        "y": -0.15694968554045152
       },
       "isLocked": false,
       "linkedName": "R-Shoot"
@@ -47,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.8343408963758
+    "rotation": 91.68468431789607
   },
   "reversed": false,
   "folder": "Neutral Zone Travel",

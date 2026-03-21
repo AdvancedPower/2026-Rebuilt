@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R Start to R-Shoot"
+            "pathName": "C Start to C-Shoot"
           }
         },
         {
@@ -17,22 +17,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "R-Shoot to R Neutral Zone"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Lower Intake"
-                }
-              }
-            ]
+            "pathName": "C-Shoot to R Neural Zone"
           }
         },
         {
@@ -57,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L Neutral Zone to L-Shoot"
+            "pathName": "RC Neutral Zone to R-Shoot"
           }
         },
         {

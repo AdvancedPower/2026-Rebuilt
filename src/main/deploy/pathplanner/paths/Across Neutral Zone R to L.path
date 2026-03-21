@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 7.7942688679299295,
-        "y": 7.316855345914929
+        "x": 7.80805817610063,
+        "y": 3.4972169811320755
       },
       "prevControl": {
-        "x": 7.754624606924016,
-        "y": 5.019211871072054
+        "x": 7.768413915094716,
+        "y": 1.1995735062892003
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "L Side Neutral Zone"
+      "linkedName": "RC Neutral Zone"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.34183742748161
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Neutral Zone Travel",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.8343408963758
+    "rotation": 91.68468431789607
   },
   "useDefaultConstraints": true
 }

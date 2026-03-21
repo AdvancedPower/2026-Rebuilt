@@ -14,6 +14,6 @@ public class Lifter {
     }
 
     public Command lower() {
-        return motor.go_to_position(-35);
+        return motor.go_to_position(-32);
     }
 }

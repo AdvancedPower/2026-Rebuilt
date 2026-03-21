@@ -3,16 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5341981132144364,
-        "y": 0.6290408805033065
+        "x": 7.890794025157232,
+        "y": 4.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3819654088050317,
-        "y": 0.3325707547169815
+        "x": 8.01151274742875,
+        "y": 6.0532475598935225
       },
       "isLocked": false,
-      "linkedName": "Outpost"
+      "linkedName": "LC Neutral Zone"
+    },
+    {
+      "anchor": {
+        "x": 7.7942688679299295,
+        "y": 7.316855345914929
+      },
+      "prevControl": {
+        "x": 8.156683443921597,
+        "y": 7.259972823730527
+      },
+      "nextControl": {
+        "x": 4.117275953858634,
+        "y": 7.893975155277559
+      },
+      "isLocked": false,
+      "linkedName": "L Side Neutral Zone"
     },
     {
       "anchor": {
@@ -20,8 +36,8 @@
         "y": 5.186407232704564
       },
       "prevControl": {
-        "x": 1.5270283018867927,
-        "y": 4.565888364779874
+        "x": -0.035448092281562094,
+        "y": 6.5741171251089705
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,8 +46,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 1.1061007957559703,
+      "rotationDegrees": 176.31434423060776
+    },
+    {
+      "waypointRelativePos": 1.3076923076923077,
+      "rotationDegrees": 178.74155733382258
     }
   ],
   "constraintZones": [],
@@ -50,10 +70,10 @@
     "rotation": -42.87890360386118
   },
   "reversed": false,
-  "folder": "Outpost Paths",
+  "folder": "Neutral Zone Travel",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -178.75463573322946
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }
